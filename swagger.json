@@ -1,0 +1,81 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Recipe API",
+      "version": "1.0.0",
+      "description": "API for managing recipes, categories, and comments"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:8080",
+        "description": "Local development server"
+      }
+    ],
+    "paths": {
+      "/recipes": {
+        "get": {
+          "summary": "Get all recipes",
+          "responses": {
+            "200": {
+              "description": "A list of recipes",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Recipe"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "summary": "Create a new recipe",
+          "responses": {
+            "201": {
+              "description": "Recipe created successfully"
+            }
+          }
+        }
+      },
+      "/categories": {
+        "get": {
+          "summary": "Get all categories",
+          "responses": {
+            "200": {
+              "description": "A list of categories"
+            }
+          }
+        }
+      },
+      "/comments": {
+        "get": {
+          "summary": "Get all comments",
+          "responses": {
+            "200": {
+              "description": "A list of comments"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Recipe": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "ingredients": { "type": "array", "items": { "type": "string" } },
+            "instructions": { "type": "string" },
+            "category": { "type": "string" },
+            "createdBy": { "type": "string" },
+            "ratings": { "type": "array", "items": { "type": "number" } },
+            "dateCreated": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    }
+  }
+  
