@@ -8,8 +8,12 @@ router.get('/auth/github', passport.authenticate('github', { scope: ['user:email
 router.get('/auth/github/callback',
     passport.authenticate('github', { failureRedirect: '/' }),
     (req, res) => {
-        res.redirect('/api-docs');
+        if (req.isAuthenticated()) {
+            res.redirect('/api-docs');
+        } else {
+            res.redirect('/');
+        }
     }
 );
 
-export default router; 
+export default router;
