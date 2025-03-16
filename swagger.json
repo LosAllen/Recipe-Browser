@@ -1,81 +1,68 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Recipe API",
-      "version": "1.0.0",
-      "description": "API for managing recipes, categories, and comments"
-    },
-    "servers": [
-      {
-        "url": "http://localhost:8080",
-        "description": "Local development server"
-      }
-    ],
-    "paths": {
-      "/recipes": {
-        "get": {
-          "summary": "Get all recipes",
-          "responses": {
-            "200": {
-              "description": "A list of recipes",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "array",
-                    "items": {
-                      "$ref": "#/components/schemas/Recipe"
-                    }
-                  }
-                }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Recipe API",
+    "version": "1.0.0",
+    "description": "API for managing recipes, categories, and comments"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/recipes": {
+      "post": {
+        "summary": "Create a new recipe",
+        "description": "Adds a new recipe to the database",
+        "operationId": "addRecipe",
+        "tags": ["Recipes"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string", "example": "Chocolate Cake" },
+                  "ingredients": { "type": "array", "items": { "type": "string" }, "example": ["Flour", "Sugar", "Eggs"] },
+                  "instructions": { "type": "string", "example": "Mix all ingredients and bake at 350°F for 30 minutes." },
+                  "category": { "type": "string", "example": "Dessert" },
+                  "createdBy": { "type": "string", "example": "65abcde1234567890abcdef" },
+                  "ratings": { "type": "array", "items": { "type": "integer" }, "example": [5] }
+                },
+                "required": ["title", "ingredients", "instructions", "category", "createdBy"]
               }
             }
           }
         },
-        "post": {
-          "summary": "Create a new recipe",
-          "responses": {
-            "201": {
-              "description": "Recipe created successfully"
+        "responses": {
+          "201": {
+            "description": "Recipe successfully created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": "60f7f1aaf74c6c001c9d4f2e",
+                  "title": "Chocolate Cake",
+                  "ingredients": ["Flour", "Sugar", "Eggs"],
+                  "instructions": "Mix all ingredients and bake at 350°F for 30 minutes.",
+                  "category": "Dessert",
+                  "createdBy": "65abcde1234567890abcdef",
+                  "ratings": [5],
+                  "dateCreated": "2024-03-15T12:00:00.000Z"
+                }
+              }
             }
-          }
-        }
-      },
-      "/categories": {
-        "get": {
-          "summary": "Get all categories",
-          "responses": {
-            "200": {
-              "description": "A list of categories"
-            }
-          }
-        }
-      },
-      "/comments": {
-        "get": {
-          "summary": "Get all comments",
-          "responses": {
-            "200": {
-              "description": "A list of comments"
-            }
-          }
-        }
-      }
-    },
-    "components": {
-      "schemas": {
-        "Recipe": {
-          "type": "object",
-          "properties": {
-            "title": { "type": "string" },
-            "ingredients": { "type": "array", "items": { "type": "string" } },
-            "instructions": { "type": "string" },
-            "category": { "type": "string" },
-            "createdBy": { "type": "string" },
-            "ratings": { "type": "array", "items": { "type": "number" } },
-            "dateCreated": { "type": "string", "format": "date-time" }
+          },
+          "400": {
+            "description": "Bad request - missing required fields"
+          },
+          "500": {
+            "description": "Internal server error"
           }
         }
       }
     }
   }
-  
+}
