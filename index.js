@@ -2,7 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import session from 'express-session';
 
-import connectDB from './config/database.js';
 import mongoose from 'mongoose';
 import setupSwagger from './config/swagger.js';
 import { initializePassport } from './middlewares/auth.js'; // Import the initializePassport function
@@ -14,7 +13,6 @@ import commentRoutes from './routes/comments.js';
 
 // Load Environment Variables
 dotenv.config();
-console.log("MONGO_URI:", process.env.MONGO_URI);
 
 // Initialize App
 const app = express();
