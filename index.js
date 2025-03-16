@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import session from 'express-session';
 
 import connectDB from './config/database.js';
+import mongoose from 'mongoose';
 import setupSwagger from './config/swagger.js';
 import { initializePassport } from './middlewares/auth.js'; // Import the initializePassport function
 
@@ -26,7 +27,12 @@ app.use(session({ secret: process.env.SESSION_SECRET || 'default_secret', resave
 initializePassport(app);
 
 // Database Connection
-connectDB();
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log("Connected to MongoDB"))
+.catch(err => console.error("MongoDB connection failed:", err));
 
 // Routes
 app.use('/users', userRoutes);
