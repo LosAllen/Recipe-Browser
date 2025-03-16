@@ -30,4 +30,4 @@ export const initializePassport = (app) => {
     app.use(passport.session());
 };
 
-export default passport;
+export { passport };

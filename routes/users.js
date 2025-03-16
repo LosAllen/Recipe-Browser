@@ -1,5 +1,5 @@
 import express from 'express';
-import passport from '../middlewares/auth.js';
+import { passport } from '../middlewares/auth.js';
 
 const router = express.Router();
 
