@@ -1,5 +1,6 @@
-const express = require('express');
-const Comment = require('../models/Comment');
+import express from 'express';
+import Comment from '../models/comment.js';
+
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -11,4 +12,4 @@ router.get('/', async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
