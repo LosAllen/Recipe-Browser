@@ -4,7 +4,7 @@ import session from 'express-session';
 
 import connectDB from './config/database.js';
 import setupSwagger from './config/swagger.js';
-import passport from './middlewares/auth.js';
+import passport, { initializePassport } from './middlewares/auth.js';
 
 import userRoutes from './routes/users.js';
 import recipeRoutes from './routes/recipes.js';
@@ -21,8 +21,8 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(session({ secret: process.env.SESSION_SECRET || 'default_secret', resave: false, saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());
+initializePassport(app); 
+
 
 // Database Connection
 connectDB();

@@ -16,14 +16,18 @@ passport.use(new GitHubStrategy(
     }
 ));
 
-// Serialize user
 passport.serializeUser((user, done) => {
     done(null, user);
 });
 
-// Deserialize user
 passport.deserializeUser((obj, done) => {
     done(null, obj);
 });
+
+// Define and export initializePassport
+export function initializePassport(app) {
+    app.use(passport.initialize());
+    app.use(passport.session());
+}
 
 export default passport;
