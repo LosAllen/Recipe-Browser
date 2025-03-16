@@ -4,7 +4,7 @@ import session from 'express-session';
 
 import connectDB from './config/database.js';
 import setupSwagger from './config/swagger.js';
-import passport, { initializePassport } from './middlewares/auth.js';
+import { initializePassport } from './middlewares/auth.js';
 
 import userRoutes from './routes/users.js';
 import recipeRoutes from './routes/recipes.js';
