@@ -1,14 +1,10 @@
-const express = require('express');
-const Category = require('../models/Category');
+import express from 'express';
+
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-    try {
-        const categories = await Category.find();
-        res.json(categories);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+// Example route
+router.get('/', (req, res) => {
+    res.send('Categories route is working');
 });
 
-module.exports = router;
+export default router;

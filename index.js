@@ -1,21 +1,26 @@
-const express = require('express');
-const connectDB = require('./config/database');
-const setupSwagger = require('./config/swagger');
-const passport = require('./middlewares/auth');
-const session = require('express-session');
-require('dotenv').config();
+import express from 'express';
+import dotenv from 'dotenv';
+import session from 'express-session';
 
-// Import Routes
-const userRoutes = require('./routes/users');
-const recipeRoutes = require('./routes/recipes');
-const categoryRoutes = require('./routes/categories');
-const commentRoutes = require('./routes/comments');
+import connectDB from './config/database.js';
+import setupSwagger from './config/swagger.js';
+import passport from './middlewares/auth.js';
 
+import userRoutes from './routes/users.js';
+import recipeRoutes from './routes/recipes.js';
+import categoryRoutes from './routes/categories.js';
+import commentRoutes from './routes/comments.js';
+
+// Load Environment Variables
+dotenv.config();
+console.log("MONGO_URI:", process.env.MONGO_URI);
+
+// Initialize App
 const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
+app.use(session({ secret: process.env.SESSION_SECRET || 'default_secret', resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
