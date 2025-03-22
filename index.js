@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
 import setupSwagger from './config/swagger.js';
 import { initializePassport } from './middlewares/auth.js'; // Import the initializePassport function
@@ -23,6 +24,20 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Session Configuration
+// Use MongoDB for session storage
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'default_secret',
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGODB_URI,
+        collectionName: 'sessions'
+    })
+}));
+
+// Middleware for parsing request bodies
 app.use(express.static('public')); // Serve static files from the public directory
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(express.json()); // Parse JSON bodies
