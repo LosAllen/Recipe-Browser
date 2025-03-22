@@ -1,7 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import session from 'express-session';
-
 import mongoose from 'mongoose';
 import setupSwagger from './config/swagger.js';
 import { initializePassport } from './middlewares/auth.js'; // Import the initializePassport function
@@ -19,10 +18,17 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(session({ secret: process.env.SESSION_SECRET || 'default_secret', resave: false, saveUninitialized: true }));
+app.use(session({ 
+    secret: process.env.SESSION_SECRET || 'default_secret', 
+    resave: false, 
+    saveUninitialized: true 
+}));
 
 //Initialize Passport before using routes
 initializePassport(app);
+
+// Fix Mongoose Warning
+mongoose.set('strictQuery', false);
 
 // Database Connection
 mongoose.connect(process.env.MONGODB_URI, {
