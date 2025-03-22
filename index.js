@@ -41,11 +41,6 @@ app.use(session({
 app.use(express.static('public')); // Serve static files from the public directory
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(express.json()); // Parse JSON bodies
-app.use(session({ 
-    secret: process.env.SESSION_SECRET || 'default_secret', 
-    resave: false, 
-    saveUninitialized: false 
-}));
 
 // Initialize Passport before using routes
 initializePassport(app);
