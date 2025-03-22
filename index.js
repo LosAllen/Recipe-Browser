@@ -17,20 +17,22 @@ dotenv.config();
 // Initialize App
 const app = express();
 
-
-
 // Middleware
-app.use(cors()); // Enable CORS for all routes
+app.use(cors({
+    origin: process.env.CORS_ORIGIN || '*',  // Allows requests from specified origin or all origins (for testing purposes)
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+app.use(express.static('public')); // Serve static files from the public directory
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
-// Parse JSON bodies
 app.use(express.json()); // Parse JSON bodies
 app.use(session({ 
     secret: process.env.SESSION_SECRET || 'default_secret', 
     resave: false, 
-    saveUninitialized: true 
+    saveUninitialized: false 
 }));
 
-//Initialize Passport before using routes
+// Initialize Passport before using routes
 initializePassport(app);
 
 // Fix Mongoose Warning
