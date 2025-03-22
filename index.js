@@ -4,6 +4,7 @@ import session from 'express-session';
 import mongoose from 'mongoose';
 import setupSwagger from './config/swagger.js';
 import { initializePassport } from './middlewares/auth.js'; // Import the initializePassport function
+import cors from 'cors';
 
 import userRoutes from './routes/users.js';
 import recipeRoutes from './routes/recipes.js';
@@ -16,8 +17,13 @@ dotenv.config();
 // Initialize App
 const app = express();
 
+
+
 // Middleware
-app.use(express.json());
+app.use(cors()); // Enable CORS for all routes
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+// Parse JSON bodies
+app.use(express.json()); // Parse JSON bodies
 app.use(session({ 
     secret: process.env.SESSION_SECRET || 'default_secret', 
     resave: false, 
@@ -50,3 +56,8 @@ setupSwagger(app);
 // Start Server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Basic Route for Homepage
+app.get('/', (req, res) => {
+    res.send('Recipe Browser API is running successfully.');
+});
