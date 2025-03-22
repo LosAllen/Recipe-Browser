@@ -10,5 +10,8 @@ const RecipeSchema = new mongoose.Schema({
     dateCreated: { type: Date, default: Date.now }
 });
 
+// Adding text index for efficient search
+RecipeSchema.index({ title: 'text', instructions: 'text', ingredients: 'text' });
+
 const Recipe = mongoose.model('Recipe', RecipeSchema);
 export default Recipe; 
