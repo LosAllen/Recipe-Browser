@@ -41,6 +41,18 @@ app.use(session({
     })
 }));
 
+// Fix Mongoose Warning
+mongoose.set('strictQuery', false);
+
+// Database Connection
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log("Connected to MongoDB"))
+.catch(err => console.error("MongoDB connection failed:", err));
+
+
 // Middleware for parsing request bodies
 app.use(express.static('public')); // Serve static files from the public directory
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
