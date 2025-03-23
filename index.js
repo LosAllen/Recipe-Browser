@@ -20,10 +20,14 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || '*',  // Allows requests from specified origin or all origins (for testing purposes)
+    origin: [
+        'http://localhost:3000',              // Allowing local development
+        'https://recipe-browser-yk8s.onrender.com' // Allowing your Render deployment
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 
 // Session Configuration
 // Use MongoDB for session storage
