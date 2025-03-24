@@ -38,7 +38,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 // PUT to update a recipe
 router.put('/:id', async (req, res) => {
   try {
@@ -85,35 +84,3 @@ router.get('/search', async (req, res) => {
 });
 
 export default router;
-=======
-// Search Recipes
-router.get('/search', async (req, res) => {
-    try {
-        const { keyword, category, ingredients, minRating } = req.query;
-
-        // Building the search filter
-        let filter = {};
-
-        if (keyword) {
-            filter.$text = { $search: keyword };
-        }
-        if (category) {
-            filter.category = category;
-        }
-        if (ingredients) {
-            filter.ingredients = { $all: ingredients.split(',') };
-        }
-        if (minRating) {
-            filter.ratings = { $elemMatch: { $gte: parseFloat(minRating) } };
-        }
-        // Perform the search        
-
-        const recipes = await Recipe.find(filter);
-        res.json(recipes);
-    } catch (error) {
-        res.status(500).json({ message: 'An error occurred while searching for recipes.', error });
-    }
-});
-
-export default router; 
->>>>>>> 4c0bfeb2ee9f2a3397d1d45175011532346e0457
