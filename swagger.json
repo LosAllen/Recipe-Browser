@@ -19,20 +19,16 @@
     "/recipes": {
       "get": {
         "summary": "Get all recipes",
-        "operationId": "getRecipes",
         "tags": [
           "Recipes"
         ],
         "responses": {
           "200": {
-            "description": "List of recipes",
+            "description": "List of items",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  }
+                  "type": "object"
                 }
               }
             }
@@ -41,7 +37,6 @@
       },
       "post": {
         "summary": "Create a new recipe",
-        "operationId": "addRecipe",
         "tags": [
           "Recipes"
         ],
@@ -56,8 +51,66 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Recipe created successfully"
+          "200": {
+            "description": "Item created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recipes/search": {
+      "get": {
+        "tags": [
+          "Recipes"
+        ],
+        "summary": "Search recipes",
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "description": "Keyword to search for",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Category of the recipe",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ingredients",
+            "in": "query",
+            "description": "Ingredients to search for (comma-separated)",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minRating",
+            "in": "query",
+            "description": "Minimum rating to filter",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of recipes matching the search criteria"
           }
         }
       }
@@ -65,20 +118,16 @@
     "/categories": {
       "get": {
         "summary": "Get all categories",
-        "operationId": "getCategories",
         "tags": [
           "Categories"
         ],
         "responses": {
           "200": {
-            "description": "List of categories",
+            "description": "List of items",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  }
+                  "type": "object"
                 }
               }
             }
@@ -86,8 +135,7 @@
         }
       },
       "post": {
-        "summary": "Create a new category",
-        "operationId": "addCategory",
+        "summary": "Create a new categorie",
         "tags": [
           "Categories"
         ],
@@ -102,8 +150,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Category created successfully"
+          "200": {
+            "description": "Item created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -111,20 +166,16 @@
     "/comments": {
       "get": {
         "summary": "Get all comments",
-        "operationId": "getComments",
         "tags": [
           "Comments"
         ],
         "responses": {
           "200": {
-            "description": "List of comments",
+            "description": "List of items",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  }
+                  "type": "object"
                 }
               }
             }
@@ -133,7 +184,6 @@
       },
       "post": {
         "summary": "Create a new comment",
-        "operationId": "addComment",
         "tags": [
           "Comments"
         ],
@@ -148,8 +198,15 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Comment created successfully"
+          "200": {
+            "description": "Item created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -157,20 +214,16 @@
     "/users": {
       "get": {
         "summary": "Get all users",
-        "operationId": "getUsers",
         "tags": [
           "Users"
         ],
         "responses": {
           "200": {
-            "description": "List of users",
+            "description": "List of items",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  }
+                  "type": "object"
                 }
               }
             }
@@ -179,7 +232,6 @@
       },
       "post": {
         "summary": "Create a new user",
-        "operationId": "addUser",
         "tags": [
           "Users"
         ],
@@ -194,16 +246,22 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "User created successfully"
+          "200": {
+            "description": "Item created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
     },
     "/categories/{id}": {
       "put": {
-        "summary": "Update a category by ID",
-        "operationId": "updateCategory",
+        "summary": "Update a categorie by ID",
         "tags": [
           "Categories"
         ],
@@ -229,13 +287,19 @@
         },
         "responses": {
           "200": {
-            "description": "Category updated successfully"
+            "description": "Item updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       },
       "delete": {
-        "summary": "Delete a category by ID",
-        "operationId": "deleteCategory",
+        "summary": "Delete a categorie by ID",
         "tags": [
           "Categories"
         ],
@@ -251,7 +315,42 @@
         ],
         "responses": {
           "200": {
-            "description": "Category deleted successfully"
+            "description": "Item deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get a categorie by ID",
+        "tags": [
+          "Categories"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -259,7 +358,6 @@
     "/comments/{id}": {
       "put": {
         "summary": "Update a comment by ID",
-        "operationId": "updateComment",
         "tags": [
           "Comments"
         ],
@@ -285,13 +383,19 @@
         },
         "responses": {
           "200": {
-            "description": "Comment updated successfully"
+            "description": "Item updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       },
       "delete": {
         "summary": "Delete a comment by ID",
-        "operationId": "deleteComment",
         "tags": [
           "Comments"
         ],
@@ -307,7 +411,42 @@
         ],
         "responses": {
           "200": {
-            "description": "Comment deleted successfully"
+            "description": "Item deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get a comment by ID",
+        "tags": [
+          "Comments"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -315,7 +454,6 @@
     "/recipes/{id}": {
       "put": {
         "summary": "Update a recipe by ID",
-        "operationId": "updateRecipe",
         "tags": [
           "Recipes"
         ],
@@ -341,13 +479,19 @@
         },
         "responses": {
           "200": {
-            "description": "Recipe updated successfully"
+            "description": "Item updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       },
       "delete": {
         "summary": "Delete a recipe by ID",
-        "operationId": "deleteRecipe",
         "tags": [
           "Recipes"
         ],
@@ -363,7 +507,42 @@
         ],
         "responses": {
           "200": {
-            "description": "Recipe deleted successfully"
+            "description": "Item deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get a recipe by ID",
+        "tags": [
+          "Recipes"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -371,7 +550,6 @@
     "/users/{id}": {
       "put": {
         "summary": "Update a user by ID",
-        "operationId": "updateUser",
         "tags": [
           "Users"
         ],
@@ -397,13 +575,19 @@
         },
         "responses": {
           "200": {
-            "description": "User updated successfully"
+            "description": "Item updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       },
       "delete": {
         "summary": "Delete a user by ID",
-        "operationId": "deleteUser",
         "tags": [
           "Users"
         ],
@@ -419,7 +603,42 @@
         ],
         "responses": {
           "200": {
-            "description": "User deleted successfully"
+            "description": "Item deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get a user by ID",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
