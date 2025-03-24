@@ -115,6 +115,23 @@
         }
       }
     },
+    "/recipes/search": {
+      "get": {
+        "tags": ["Recipes"],
+        "summary": "Search recipes",
+        "parameters": [
+          { "name": "keyword", "in": "query", "description": "Keyword to search for", "required": false, "schema": { "type": "string" } },
+          { "name": "category", "in": "query", "description": "Category of the recipe", "required": false, "schema": { "type": "string" } },
+          { "name": "ingredients", "in": "query", "description": "Ingredients to search for (comma-separated)", "required": false, "schema": { "type": "string" } },
+          { "name": "minRating", "in": "query", "description": "Minimum rating to filter", "required": false, "schema": { "type": "number" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of recipes matching the search criteria"
+          }
+        }
+      }
+    },
     "/categories": {
       "get": {
         "summary": "Get all categories",
