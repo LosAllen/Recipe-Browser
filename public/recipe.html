@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recipe Details</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
   <header>
     <h1>Recipe Details</h1>
     <a href="index.html">← Back to Recipes</a>
   </header>
-  <main id="recipeDetail"></main>
+
+  <div id="recipeDetails">
+    <h1 id="recipeTitle">Loading...</h1>
+    <p><strong>Category:</strong> <span id="recipeCategory"></span></p>
+    <h3>Ingredients</h3>
+    <ul id="recipeIngredients"></ul>
+    <h3>Instructions</h3>
+    <p id="recipeInstructions"></p>
+  </div>
+
   <section id="commentsSection">
     <h2>Comments</h2>
     <ul id="commentsList"></ul>
+    <form id="commentForm">
+      <textarea id="newComment" rows="4" placeholder="Add a comment..."></textarea><br>
+      <button type="submit">Submit Comment</button>
+    </form>
   </section>
+
   <script src="js/recipe.js"></script>
 </body>
 </html>
