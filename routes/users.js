@@ -4,27 +4,31 @@ import User from '../models/user.js';
 
 const router = express.Router();
 
-// GitHub OAuth Login
-router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
-
-// GitHub OAuth Callback
 router.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
-  (req, res) => {
+  async (req, res) => {
     if (req.isAuthenticated()) {
-      res.cookie("userId", req.user._id.toString(), {
+      let user = await User.findOne({ githubId: req.user.id });
+      if (!user) {
+        user = await User.create({
+          githubId: req.user.id,
+          username: req.user.username,
+          email: req.user.emails?.[0]?.value || '',
+        });
+      }
+
+      res.cookie("userId", user._id.toString(), {
         httpOnly: false,
         sameSite: "Lax",
         secure: false
-      });      
+      });
 
-      res.redirect('/index.html');
+      res.redirect('/add.html');
     } else {
       res.redirect('/');
     }
   }
 );
-
 
 // GET all users
 router.get('/', async (req, res) => {
