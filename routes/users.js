@@ -12,11 +12,11 @@ router.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
     if (req.isAuthenticated()) {
-      res.cookie("username", req.user.username, {
+      res.cookie("userId", req.user._id.toString(), {
         httpOnly: false,
         sameSite: "Lax",
         secure: false
-      });
+      });      
 
       res.redirect('/index.html');
     } else {

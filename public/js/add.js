@@ -7,14 +7,14 @@ document.getElementById("addRecipeForm").addEventListener("submit", async (e) =>
     if (match) return match[2];
   }
 
-  const username = getCookie("username") || "unknown";
+  const userId = getCookie("userId");
 
   const recipe = {
     title: form.title.value,
     category: form.category.value,
     ingredients: form.ingredients.value.split(",").map(i => i.trim()),
     instructions: form.instructions.value,
-    createdBy: username
+    createdBy: userId
   };
 
   const baseUrl = window.location.hostname === "localhost"
