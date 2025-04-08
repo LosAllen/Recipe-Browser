@@ -22,7 +22,8 @@ const app = express();
 app.use(cors({
     origin: [
         'http://localhost:3000',              // Allowing local development
-        'https://recipe-browser-yk8s.onrender.com' // Allowing your Render deployment
+        'https://recipe-browser-yk8s.onrender.com', // Alllow Render Deploy
+        'https://recipe-browser-8fj5.onrender.com' // Allow Render Deploy
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
