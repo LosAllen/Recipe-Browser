@@ -9,6 +9,11 @@ document.getElementById("addRecipeForm").addEventListener("submit", async (e) =>
 
   const userId = getCookie("userId");
 
+  if (!userId) {
+    alert("You must be logged in to add a recipe.");
+    return;
+  }
+
   const recipe = {
     title: form.title.value,
     category: form.category.value,
