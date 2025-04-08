@@ -8,17 +8,23 @@ const router = express.Router();
 router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 
 // GitHub OAuth Callback
-router.get(
-  '/auth/github/callback',
+router.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
     if (req.isAuthenticated()) {
-      res.redirect('/api-docs');
+      res.cookie("username", req.user.username, {
+        httpOnly: false,
+        sameSite: "Lax",
+        secure: false
+      });
+
+      res.redirect('/index.html');
     } else {
       res.redirect('/');
     }
   }
 );
+
 
 // GET all users
 router.get('/', async (req, res) => {

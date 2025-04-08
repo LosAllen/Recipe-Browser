@@ -4,9 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function getBaseUrl() {
-  return window.location.hostname === "localhost"
-    ? "http://localhost:8080"
-    : "https://recipe-browser-yk8s.onrender.com";
+  const host = window.location.hostname;
+  if (host === "localhost") return "http://localhost:8080";
+  if (host === "recipe-browser-yk8s.onrender.com") return "https://recipe-browser-yk8s.onrender.com";
+  return "https://recipe-browser-8fj5.onrender.com";
 }
 
 async function fetchRecipesAndDisplay() {
