@@ -4,7 +4,7 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
 import setupSwagger from './config/swagger.js';
-import passport from "./middlewares/auth.js";
+import passport, { initializePassport } from './middlewares/auth.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
@@ -62,7 +62,7 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(express.json()); // Parse JSON bodies
 
 // Initialize Passport before using routes
-passport.initializePassport(app);
+initializePassport(app);
 
 // Routes
 app.use('/users', userRoutes);
