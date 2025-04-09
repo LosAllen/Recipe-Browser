@@ -13,13 +13,15 @@
   </header>
   <main>
     <form id="addRecipeForm">
-      <input type="text" name="title" placeholder="Title" required />
-      <input type="text" name="category" placeholder="Category" />
-      <textarea name="ingredients" placeholder="Ingredients (comma-separated)" required></textarea>
-      <textarea name="instructions" placeholder="Instructions" required></textarea>
+      <input id="newRecipeTitle" placeholder="Title" />
+      <input id="newRecipeCategory" placeholder="Category" />
+      <input id="newRecipeIngredients" placeholder="Ingredients (comma-separated)" />
+      <textarea id="newRecipeInstructions" placeholder="Instructions"></textarea>
       <button type="submit">Submit</button>
     </form>
   </main>
+  <script src="js/recipe.js"></script>
   <script src="js/add.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>

@@ -178,6 +178,7 @@ document.querySelectorAll(".category-button").forEach(btn => {
   btn.addEventListener("click", () => handleCategoryFilter(btn.dataset.category));
 });
 if (document.getElementById("addRecipeForm")) {
+  console.log("Found addRecipeForm, attaching submit listener.");
   document.getElementById("addRecipeForm").addEventListener("submit", handleAddRecipe);
 }
 if (document.getElementById("recipeSubmissionForm")) {
