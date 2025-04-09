@@ -186,16 +186,20 @@ const urlParams = new URLSearchParams(window.location.search);
 const recipeId = urlParams.get("id");
 if (recipeId) fetchRecipeDetails(recipeId);
 
-// Check if the user is authenticated and update the UI
-// Displays a greeting and logout button if authenticated
-// Otherwise, shows a login button
-// Called on page load to reflect current auth status
-// Uses fetch with credentials to preserve session cookies
-// Logs any errors to the console without interrupting UI
 async function checkAuthStatus() {
   const baseUrl = getBaseUrl();
   const authSection = document.getElementById("authSection");
+  const params = new URLSearchParams(window.location.search);
+  const githubIdFromUrl = params.get("githubId");
   if (!authSection) return;
+
+  // Store GitHub ID if passed in URL
+  if (githubIdFromUrl) {
+    localStorage.setItem("githubId", githubIdFromUrl);
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
+  const storedGithubId = localStorage.getItem("githubId");
 
   try {
     const res = await fetch(`${baseUrl}/auth/user`, { credentials: "include" });
@@ -204,6 +208,23 @@ async function checkAuthStatus() {
       authSection.innerHTML = `
         <span>👋 Hello, ${user.username}</span>
         <button onclick="window.location.href='${baseUrl}/auth/logout'">Logout of GitHub</button>
+      `;
+    } else if (storedGithubId) {
+      // If session failed but GitHub ID is stored, try matching it
+      const usersRes = await fetch(`${baseUrl}/users`);
+      if (usersRes.ok) {
+        const users = await usersRes.json();
+        const matchedUser = users.find(u => u.githubId === storedGithubId);
+        if (matchedUser) {
+          authSection.innerHTML = `
+            <span>👋 Hello, ${matchedUser.username}</span>
+            <button onclick="window.location.href='${baseUrl}/auth/logout'">Logout of GitHub</button>
+          `;
+          return;
+        }
+      }
+      authSection.innerHTML = `
+        <button onclick="window.location.href='${baseUrl}/auth/github'">Login with GitHub</button>
       `;
     } else {
       authSection.innerHTML = `
@@ -214,6 +235,7 @@ async function checkAuthStatus() {
     console.error("Auth check failed:", err);
   }
 }
+
 
 // Call the auth check on page load
 checkAuthStatus();

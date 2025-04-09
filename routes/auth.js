@@ -12,7 +12,8 @@ router.get(
   '/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('/index.html');
+    const githubId = req.user.githubId;
+    res.redirect(`/index.html?githubId=${githubId}`);
   }
 );
 
