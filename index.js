@@ -20,6 +20,7 @@ dotenv.config();
 
 // Initialize App
 const app = express();
+app.set('trust proxy', 1);
 
 // Parse Cookies Early
 app.use(cookieParser());
@@ -28,7 +29,6 @@ app.use(cookieParser());
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://recipe-browser-yk8s.onrender.com',
     'https://recipe-browser-8fj5.onrender.com'
   ],
   credentials: true,

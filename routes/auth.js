@@ -7,12 +7,15 @@ const router = express.Router();
 router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 
 // GitHub callback
-router.get(
-  '/auth/github/callback',
+router.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
-    const githubId = req.user.githubId;
-    res.redirect(`/index.html?githubId=${githubId}`);
+    console.log("✅ Authenticated, session should be set.");
+    res.send(`
+      <h1>GitHub Login Success</h1>
+      <p>Session should now be set. Check cookies in dev tools.</p>
+      <a href="/index.html">Go to Home</a>
+    `);
   }
 );
 
