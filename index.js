@@ -21,9 +21,10 @@ const app = express();
 // Middleware
 app.use(cors({
     origin: [
-        'http://localhost:3000',              // Allowing local development
-        'https://recipe-browser-yk8s.onrender.com' // Allowing your Render deployment
+        'http://localhost:3000',
+        'https://recipe-browser-yk8s.onrender.com'
     ],
+    credentials: true, // ✅ REQUIRED for session cookies to work cross-origin
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -36,10 +37,14 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI,
-        collectionName: 'sessions'
-    })
-}));
+      mongoUrl: process.env.MONGODB_URI,
+      collectionName: 'sessions'
+    }),
+    cookie: {
+      sameSite: 'none', // ✅ Required for cross-origin cookies
+      secure: true      // ✅ Must be true in production (HTTPS)
+    }
+  }));
 
 // Fix Mongoose Warning
 mongoose.set('strictQuery', false);

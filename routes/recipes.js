@@ -1,5 +1,6 @@
 import express from 'express';
 import Recipe from '../models/recipe.js';
+import { ensureAuthenticated } from '../middlewares/auth.js';
 
 const router = express.Router();
 
@@ -25,11 +26,18 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST a new recipe
-router.post('/', async (req, res) => {
+router.post('/', ensureAuthenticated, async (req, res) => {
   console.log("Incoming Recipe Data:", req.body);
+
   try {
-    const newRecipe = new Recipe(req.body);
+    const recipeData = {
+      ...req.body,
+      createdBy: req.user._id, // ✅ Attach the logged-in user's ObjectId
+    };
+
+    const newRecipe = new Recipe(recipeData);
     const savedRecipe = await newRecipe.save();
+
     console.log("Recipe Saved to MongoDB:", savedRecipe);
     res.status(201).json(savedRecipe);
   } catch (err) {
