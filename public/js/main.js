@@ -1,5 +1,5 @@
-// This script handles the functionality of the recipe browser application.
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("🍳 main.js loaded!");
   fetchRecipesAndDisplay();
   checkAuthStatus();
 });
