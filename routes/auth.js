@@ -11,11 +11,7 @@ router.get('/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
     console.log("✅ Authenticated, session should be set.");
-    res.send(`
-      <h1>GitHub Login Success</h1>
-      <p>Session should now be set. Check cookies in dev tools.</p>
-      <a href="/index.html">Go to Home</a>
-    `);
+    res.redirect('/index.html?githubId=' + req.user.githubId);
   }
 );
 

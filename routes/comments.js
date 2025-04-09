@@ -25,13 +25,35 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST a new comment
-router.post('/', async (req, res) => {
+// GET comments for a specific recipe
+router.get('/recipe/:recipeId', async (req, res) => {
   try {
-    const newComment = new Comment(req.body);
-    const savedComment = await newComment.save();
-    res.status(201).json(savedComment);
+    const comments = await Comment.find({ recipe: req.params.recipeId });
+    res.json(comments);
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST a new comment
+router.post('/', ensureAuthenticated, async (req, res) => {
+  try {
+    const { text, recipeId } = req.body;
+
+    if (!text || !recipeId) {
+      return res.status(400).json({ error: 'Missing comment text or recipe ID' });
+    }
+
+    const comment = new Comment({
+      text,
+      recipe: recipeId,
+      author: req.user._id
+    });
+
+    const saved = await comment.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    console.error("Error saving comment:", err.message);
     res.status(400).json({ error: err.message });
   }
 });

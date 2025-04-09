@@ -10,23 +10,20 @@ document.addEventListener("DOMContentLoaded", () => {
       ? "https://recipe-browser-yk8s.onrender.com"
       : "https://recipe-browser-8fj5.onrender.com");  
 
-  // Fetch and display recipe
-  fetch(`${baseUrl}/recipes/${recipeId}`)
+  // Fetch and display comments
+  fetch(`${baseUrl}/comments/recipe/${recipeId}`, {
+  })
     .then(res => res.json())
-    .then(recipe => {
-      const detail = document.getElementById("recipeDetails");
-      detail.innerHTML = `
-        <div class="recipe-card">
-          <h1>${recipe.title}</h1>
-          <p><strong>Category:</strong> ${recipe.category || "N/A"}</p>
-          <h3>Ingredients</h3>
-          <ul>${recipe.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}</ul>
-          <h3>Instructions</h3>
-          <p>${recipe.instructions || "No instructions provided."}</p>
-        </div>
-      `;
+    .then(comments => {
+      const list = document.getElementById("commentsList");
+      list.innerHTML = '';
+      comments.forEach(comment => {
+        const li = document.createElement("li");
+        li.textContent = comment.text || "No content";
+        list.appendChild(li);
+      });
     })
-    .catch(err => console.error('Error fetching recipe details:', err));
+  .catch(err => console.error('Error fetching comments:', err));
 
   // Fetch and display comments
   fetch(`${baseUrl}/comments`)
@@ -54,8 +51,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const response = await fetch(`${baseUrl}/comments`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ text: newComment, recipeId })
     });
+    
 
     if (response.ok) {
       alert("Comment added successfully!");
