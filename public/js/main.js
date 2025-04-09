@@ -77,12 +77,13 @@ async function handleAddRecipe(e) {
   const title = document.getElementById("newRecipeTitle").value;
   const category = document.getElementById("newRecipeCategory").value;
   const ingredients = document.getElementById("newRecipeIngredients").value.split(",").map(i => i.trim());
+  const instructions = document.getElementById("newRecipeInstructions").value || "No instructions provided.";
   const baseUrl = getBaseUrl();
   const response = await fetch(`${baseUrl}/recipes`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
-    body: JSON.stringify({ title, category, ingredients })
+    body: JSON.stringify({ title, category, ingredients, instructions })
   });
   alert(response.ok ? "Recipe added!" : "Failed to add recipe.");
   if (response.ok) fetchRecipesAndDisplay();
