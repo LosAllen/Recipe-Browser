@@ -25,10 +25,26 @@ router.get('/auth/github', passport.authenticate('github', { scope: ['user:email
 // GitHub OAuth Callback
 router.get(
   '/auth/github/callback',
+
   passport.authenticate('github', { failureRedirect: '/' }),
-  (req, res) => {
+  async (req, res) => {
     if (req.isAuthenticated()) {
-      res.redirect('/api-docs');
+      let user = await User.findOne({ githubId: req.user.id });
+      if (!user) {
+        user = await User.create({
+          githubId: req.user.id,
+          username: req.user.username,
+          email: req.user.emails?.[0]?.value || '',
+        });
+      }
+
+      res.cookie("userId", user._id.toString(), {
+        httpOnly: false,
+        sameSite: "Lax",
+        secure: false
+      });
+
+      res.redirect('/add.html');
     } else {
       res.redirect('/');
     }

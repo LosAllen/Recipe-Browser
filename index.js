@@ -4,9 +4,11 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
 import setupSwagger from './config/swagger.js';
-import { initializePassport } from './middlewares/auth.js'; // Import the initializePassport function
+import passport, { initializePassport } from './middlewares/auth.js';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
+// Routes
 import userRoutes from './routes/users.js';
 import recipeRoutes from './routes/recipes.js';
 import categoryRoutes from './routes/categories.js';
@@ -19,14 +21,17 @@ dotenv.config();
 const app = express();
 
 // Middleware
+app.use(cookieParser());
 app.use(cors({
     origin: [
         'http://localhost:3000',
         'https://recipe-browser-yk8s.onrender.com'
+
     ],
     credentials: true, // ✅ REQUIRED for session cookies to work cross-origin
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
 
 
@@ -35,7 +40,7 @@ app.use(cors({
 app.use(session({
     secret: process.env.SESSION_SECRET || 'default_secret',
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     store: MongoStore.create({
       mongoUrl: process.env.MONGODB_URI,
       collectionName: 'sessions'
@@ -46,10 +51,8 @@ app.use(session({
     }
   }));
 
-// Fix Mongoose Warning
-mongoose.set('strictQuery', false);
-
 // Database Connection
+mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -66,17 +69,6 @@ app.use(express.json()); // Parse JSON bodies
 // Initialize Passport before using routes
 initializePassport(app);
 
-// Fix Mongoose Warning
-mongoose.set('strictQuery', false);
-
-// Database Connection
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log("Connected to MongoDB"))
-.catch(err => console.error("MongoDB connection failed:", err));
-
 // Routes
 app.use('/users', userRoutes);
 app.use('/recipes', recipeRoutes);
@@ -86,11 +78,11 @@ app.use('/comments', commentRoutes);
 // Swagger Documentation
 setupSwagger(app);
 
-// Start Server
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
 // Basic Route for Homepage
 app.get('/', (req, res) => {
     res.send('Recipe Browser API is running successfully.');
 });
+
+// Start Server
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

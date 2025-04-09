@@ -4,7 +4,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!recipeId) return;
 
-  const baseUrl = window.location.hostname === "localhost" ? "http://localhost:8080" : "https://recipe-browser-yk8s.onrender.com";
+  const baseUrl = (window.location.hostname === "localhost"
+    ? "http://localhost:8080"
+    : window.location.hostname === "recipe-browser-yk8s.onrender.com"
+      ? "https://recipe-browser-yk8s.onrender.com"
+      : "https://recipe-browser-8fj5.onrender.com");  
 
   // Fetch and display recipe
   fetch(`${baseUrl}/recipes/${recipeId}`)
