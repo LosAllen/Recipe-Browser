@@ -1,5 +1,6 @@
 import express from 'express';
 import Comment from '../models/comment.js';
+import { ensureAuthenticated } from '../middlewares/auth.js';
 
 const router = express.Router();
 

@@ -194,25 +194,20 @@ if (recipeId) fetchRecipeDetails(recipeId);
 // Logs any errors to the console without interrupting UI
 async function checkAuthStatus() {
   const baseUrl = getBaseUrl();
+  const authSection = document.getElementById("authSection");
+  if (!authSection) return;
 
   try {
-    const res = await fetch(`${baseUrl}/users/me`, {
-      credentials: "include"
-    });
-
-    const authSection = document.getElementById("authSection");
-
-    if (!authSection) return;
-
+    const res = await fetch(`${baseUrl}/auth/user`, { credentials: "include" });
     if (res.ok) {
       const user = await res.json();
       authSection.innerHTML = `
         <span>👋 Hello, ${user.username}</span>
-        <button id="login-btn" onclick="window.location.href='${baseUrl}/users/logout'">Logout</button>
+        <button onclick="window.location.href='${baseUrl}/auth/logout'">Logout of GitHub</button>
       `;
     } else {
       authSection.innerHTML = `
-        <button id="logout-btn" onclick="window.location.href='${baseUrl}/users/auth/github'">Login with GitHub</button>
+        <button onclick="window.location.href='${baseUrl}/auth/github'">Login with GitHub</button>
       `;
     }
   } catch (err) {
