@@ -21,7 +21,6 @@ router.get(
   '/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),
   (req, res) => {
-    // ✅ After login success, redirect to frontend
     const frontendURL = process.env.FRONTEND_URL || '/';
     res.redirect(frontendURL);
   }
