@@ -184,3 +184,40 @@ if (document.getElementById("recipeUpdateForm")) {
 const urlParams = new URLSearchParams(window.location.search);
 const recipeId = urlParams.get("id");
 if (recipeId) fetchRecipeDetails(recipeId);
+
+// Check if the user is authenticated and update the UI
+// Displays a greeting and logout button if authenticated
+// Otherwise, shows a login button
+// Called on page load to reflect current auth status
+// Uses fetch with credentials to preserve session cookies
+// Logs any errors to the console without interrupting UI
+async function checkAuthStatus() {
+  const baseUrl = getBaseUrl();
+
+  try {
+    const res = await fetch(`${baseUrl}/users/me`, {
+      credentials: "include" // 🔐 This ensures cookies/session data are sent
+    });
+
+    const authSection = document.getElementById("authSection");
+
+    if (!authSection) return;
+
+    if (res.ok) {
+      const user = await res.json();
+      authSection.innerHTML = `
+        <span>👋 Hello, ${user.username}</span>
+        <button onclick="window.location.href='${baseUrl}/users/logout'">Logout</button>
+      `;
+    } else {
+      authSection.innerHTML = `
+        <button onclick="window.location.href='${baseUrl}/users/auth/github'">Login with GitHub</button>
+      `;
+    }
+  } catch (err) {
+    console.error("Auth check failed:", err);
+  }
+}
+
+// Call the auth check on page load
+checkAuthStatus();

@@ -1,10 +1,31 @@
 import express from 'express';
 import passport from '../middlewares/auth.js';
 import User from '../models/user.js';
+import mongoose from 'mongoose';
 
 const router = express.Router();
 
-router.get('/auth/github/callback',
+
+// Route to check logged-in user
+router.get('/me', (req, res) => {
+  console.log("/users/me hit");
+  console.log("Authenticated?", req.isAuthenticated());
+  console.log("req.user:", req.user);
+
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+
+  return res.json(req.user);
+});
+
+// GitHub OAuth Login
+router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
+
+// GitHub OAuth Callback
+router.get(
+  '/auth/github/callback',
+
   passport.authenticate('github', { failureRedirect: '/' }),
   async (req, res) => {
     if (req.isAuthenticated()) {
@@ -40,10 +61,28 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET user by GitHub ID
+router.get('/github/:githubId', async (req, res) => {
+  try {
+    const user = await User.findOne({ githubId: req.params.githubId });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET user by ID
 router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  // Validate ObjectId
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid user ID format' });
+  }
+
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(id);
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json(user);
   } catch (err) {
@@ -64,8 +103,15 @@ router.post('/', async (req, res) => {
 
 // PUT update user by ID
 router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  // Validate ObjectId
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid user ID format' });
+  }
+
   try {
-    const updated = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updated = await User.findByIdAndUpdate(id, req.body, { new: true });
     if (!updated) return res.status(404).json({ error: 'User not found' });
     res.json(updated);
   } catch (err) {
@@ -75,13 +121,26 @@ router.put('/:id', async (req, res) => {
 
 // DELETE user by ID
 router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  // Validate ObjectId
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: 'Invalid user ID format' });
+  }
+
   try {
-    const deleted = await User.findByIdAndDelete(req.params.id);
+    const deleted = await User.findByIdAndDelete(id);
     if (!deleted) return res.status(404).json({ error: 'User not found' });
     res.json({ message: 'User deleted' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+router.get('/logout', (req, res) => {
+  req.logout(err => {
+    if (err) return res.status(500).json({ error: 'Logout failed' });
+    res.redirect('/');
+  });
 });
 
 export default router;

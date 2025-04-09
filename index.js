@@ -24,10 +24,11 @@ const app = express();
 app.use(cookieParser());
 app.use(cors({
     origin: [
-        'http://localhost:3000',              // Allowing local Deploy
-        'https://recipe-browser-yk8s.onrender.com', // Alllow Render Deploy
-        'https://recipe-browser-8fj5.onrender.com' // Allow Render Deploy
+        'http://localhost:3000',
+        'https://recipe-browser-yk8s.onrender.com'
+
     ],
+    credentials: true, // ✅ REQUIRED for session cookies to work cross-origin
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -41,10 +42,14 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI,
-        collectionName: 'sessions'
-    })
-}));
+      mongoUrl: process.env.MONGODB_URI,
+      collectionName: 'sessions'
+    }),
+    cookie: {
+      sameSite: 'none', // ✅ Required for cross-origin cookies
+      secure: true      // ✅ Must be true in production (HTTPS)
+    }
+  }));
 
 // Database Connection
 mongoose.set('strictQuery', false);

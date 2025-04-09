@@ -1,36 +1,68 @@
 import passport from 'passport';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import dotenv from 'dotenv';
+import User from '../models/user.js'; // Make sure the path is correct
 
 dotenv.config();
 
 // Configure GitHub OAuth Strategy
-passport.use(new GitHubStrategy(
-    {
+passport.use(
+    new GitHubStrategy(
+      {
         clientID: process.env.GITHUB_CLIENT_ID,
         clientSecret: process.env.GITHUB_CLIENT_SECRET,
         callbackURL: process.env.GITHUB_CALLBACK_URL || "http://localhost:8080/users/auth/github/callback"
-    },
-    (accessToken, refreshToken, profile, done) => {
-        return done(null, profile); 
-    }
-));
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          console.log("GitHub profile received:", profile.id, profile.username);
+  
+          let user = await User.findOne({ githubId: profile.id });
+          console.log("Found existing user?", user ? "YES" : "NO");
+  
+          if (!user) {
+            user = await User.create({
+              githubId: profile.id,
+              username: profile.username,
+              avatar: profile.photos?.[0]?.value || null
+            });
+            console.log("✅ Created new user:", user);
+          }
+  
+          return done(null, user);
+        } catch (err) {
+          console.error("❌ GitHub strategy failed:", err); // <---- important
+          return done(err, null);
+        }
+      }
+    )
+  );
 
-// Serialize user (store only the user ID in session)
+// Serialize GitHub ID
 passport.serializeUser((user, done) => {
-    done(null, user.id); // Store only user ID
-});
+    done(null, user.githubId); // ✅ Store GitHub ID
+  });
+  
+  // Deserialize using githubId
+  passport.deserializeUser(async (githubId, done) => {
+    try {
+      const user = await User.findOne({ githubId }); // ✅ Lookup by GitHub ID
+      done(null, user);
+    } catch (err) {
+      done(err, null);
+    }
+  });
 
-// Deserialize user (retrieve from database if needed)
-passport.deserializeUser((id, done) => {
-    // TODO: Replace with actual DB lookup if needed
-    done(null, { id }); // Return only the user ID for now
-});
-
-// Function to initialize passport middleware
+// Middleware to initialize Passport
 export const initializePassport = (app) => {
-    app.use(passport.initialize());
-    app.use(passport.session());
+  app.use(passport.initialize());
+  app.use(passport.session());
 };
 
-export default passport; // Fixes the incorrect named export
+// Middleware to check if user is authenticated
+export const ensureAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) return next();
+  res.status(401).json({ error: 'Authentication required' });
+};
+
+export default passport;
