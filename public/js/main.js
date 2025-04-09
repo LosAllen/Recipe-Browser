@@ -81,6 +81,7 @@ async function handleAddRecipe(e) {
   const response = await fetch(`${baseUrl}/recipes`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ title, category, ingredients })
   });
   alert(response.ok ? "Recipe added!" : "Failed to add recipe.");
@@ -102,6 +103,7 @@ async function handleEditRecipe(recipeId) {
   const response = await fetch(`${baseUrl}/recipes/${recipeId}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ title, category, ingredients })
   });
   alert(response.ok ? "Recipe updated!" : "Failed to update recipe.");
@@ -128,6 +130,7 @@ async function handleRecipeSubmission(e) {
   const response = await fetch(`${baseUrl}/recipes`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ title, category, ingredients, instructions })
   });
   alert(response.ok ? "Submitted successfully!" : "Submission failed.");
@@ -144,6 +147,7 @@ async function handleRecipeUpdate(e) {
   const response = await fetch(`${baseUrl}/recipes/${recipeId}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ title, category, ingredients, instructions })
   });
   alert(response.ok ? "Updated successfully!" : "Update failed.");

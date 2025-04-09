@@ -27,11 +27,20 @@ router.get('/auth/user', (req, res) => {
 });
 
 // Logout
-router.get('/auth/logout', (req, res) => {
+router.get('/auth/logout', (req, res, next) => {
   req.logout(err => {
-    if (err) return res.status(500).json({ error: 'Logout failed' });
-    res.redirect('/');
+    if (err) return next(err);
+
+    req.session.destroy(() => {
+      res.clearCookie('connect.sid', {
+        path: '/',
+        sameSite: 'none',
+        secure: true,
+      });
+      res.redirect('/index.html');
+    });
   });
 });
+
 
 export default router;

@@ -32,7 +32,7 @@ router.post('/', ensureAuthenticated, async (req, res) => {
   try {
     const recipeData = {
       ...req.body,
-      createdBy: req.user._id, // ✅ Attach the logged-in user's ObjectId
+      createdBy: req.user._id,
     };
 
     const newRecipe = new Recipe(recipeData);
