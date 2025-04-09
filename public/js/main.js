@@ -195,11 +195,17 @@ async function checkAuthStatus() {
   const authSection = document.getElementById("authSection");
   const params = new URLSearchParams(window.location.search);
   const githubIdFromUrl = params.get("githubId");
+  const logoutFlag = params.get("logout");
   if (!authSection) return;
 
   // Store GitHub ID if passed in URL
   if (githubIdFromUrl) {
     localStorage.setItem("githubId", githubIdFromUrl);
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+
+  if (logoutFlag) {
+    localStorage.removeItem("githubId");
     window.history.replaceState({}, document.title, window.location.pathname);
   }
 
@@ -239,7 +245,6 @@ async function checkAuthStatus() {
     console.error("Auth check failed:", err);
   }
 }
-
 
 // Call the auth check on page load
 checkAuthStatus();

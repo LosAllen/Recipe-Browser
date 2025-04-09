@@ -37,7 +37,7 @@ router.get('/auth/logout', (req, res, next) => {
         sameSite: 'none',
         secure: true,
       });
-      res.redirect('/index.html');
+      res.redirect('/index.html?logout=true');
     });
   });
 });
