@@ -5,49 +5,25 @@ import mongoose from 'mongoose';
 
 const router = express.Router();
 
-
 // Route to check logged-in user
 router.get('/me', (req, res) => {
-  console.log("/users/me hit");
-  console.log("Authenticated?", req.isAuthenticated());
-  console.log("req.user:", req.user);
-
   if (!req.isAuthenticated()) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
-
   return res.json(req.user);
 });
 
 // GitHub OAuth Login
 router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 
-// GitHub OAuth Callback
+// GitHub OAuth Callback (FIXED)
 router.get(
   '/auth/github/callback',
-
   passport.authenticate('github', { failureRedirect: '/' }),
-  async (req, res) => {
-    if (req.isAuthenticated()) {
-      let user = await User.findOne({ githubId: req.user.id });
-      if (!user) {
-        user = await User.create({
-          githubId: req.user.id,
-          username: req.user.username,
-          email: req.user.emails?.[0]?.value || '',
-        });
-      }
-
-      res.cookie("userId", user._id.toString(), {
-        httpOnly: false,
-        sameSite: "Lax",
-        secure: false
-      });
-
-      res.redirect('/add.html');
-    } else {
-      res.redirect('/');
-    }
+  (req, res) => {
+    // ✅ After login success, redirect to frontend
+    const frontendURL = process.env.FRONTEND_URL || '/';
+    res.redirect(frontendURL);
   }
 );
 
@@ -76,7 +52,6 @@ router.get('/github/:githubId', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
-  // Validate ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid user ID format' });
   }
@@ -105,7 +80,6 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
 
-  // Validate ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid user ID format' });
   }
@@ -123,7 +97,6 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
-  // Validate ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: 'Invalid user ID format' });
   }
@@ -136,6 +109,8 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Logout route
 router.get('/logout', (req, res) => {
   req.logout(err => {
     if (err) return res.status(500).json({ error: 'Logout failed' });
