@@ -13,7 +13,7 @@
 }
 
 /* =============================
-   🌐 General Styles
+    General Styles
    ============================= */
 body {
     font-family: Arial, sans-serif;
@@ -52,14 +52,14 @@ header a {
 }
 
 /* =============================
-   🔍 Main Content Styles
+   Main Content Styles
    ============================= */
 main {
     padding: 1rem;
 }
 
 /* =============================
-   🍲 Recipe Details Styles
+   Recipe Details Styles
    ============================= */
 #recipeDetails {
     background: var(--card-background);
@@ -108,7 +108,7 @@ main {
 }
 
 /* =============================
-   📋 Add Recipe Form Styles
+   Add Recipe Form Styles
    ============================= */
 form {
     display: flex;

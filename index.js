@@ -21,67 +21,66 @@ dotenv.config();
 // Initialize App
 const app = express();
 
-// Middleware
+// Parse Cookies Early
 app.use(cookieParser());
+
+// CORS Configuration
 app.use(cors({
-    origin: [
-        'http://localhost:3000',
-        'https://recipe-browser-yk8s.onrender.com',
-        "https://recipe-browser-8fj5.onrender.com"
-    ],
-    credentials: true, // ✅ REQUIRED for session cookies to work cross-origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: [
+    'http://localhost:3000',
+    'https://recipe-browser-yk8s.onrender.com',
+    'https://recipe-browser-8fj5.onrender.com'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-
 // Session Configuration
-// Use MongoDB for session storage
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'default_secret',
-    resave: false,
-    saveUninitialized: true,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI,
-      collectionName: 'sessions'
-    }),
-    cookie: {
-      sameSite: 'none', // ✅ Required for cross-origin cookies
-      secure: true      // ✅ Must be true in production (HTTPS)
-    }
-  }));
+  secret: process.env.SESSION_SECRET || 'default_secret',
+  resave: false,
+  saveUninitialized: true,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    collectionName: 'sessions'
+  }),
+  cookie: {
+    sameSite: 'none',
+    secure: true
+  }
+}));
 
-// Database Connection
+// Initialize Passport
+initializePassport(app);
+
+// Body Parsers and Static Files
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// Connect to MongoDB
 mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 })
 .then(() => console.log("Connected to MongoDB"))
 .catch(err => console.error("MongoDB connection failed:", err));
 
-
-// Middleware for parsing request bodies
-app.use(express.static('public')); // Serve static files from the public directory
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
-app.use(express.json()); // Parse JSON bodies
-
-// Initialize Passport before using routes
-initializePassport(app);
-
 // Routes
+app.use('/', authRoutes); // Place auth routes early so GitHub flow works before checks
 app.use('/users', userRoutes);
 app.use('/recipes', recipeRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/comments', commentRoutes);
-app.use('/', authRoutes);
 
-// Swagger Documentation
+// Swagger Docs
 setupSwagger(app);
 
-// Basic Route for Homepage
+// Root API Test
 app.get('/', (req, res) => {
-    res.send('Recipe Browser API is running successfully.');
+  res.send('Recipe Browser API is running successfully.');
 });
 
 // Start Server
