@@ -1,6 +1,7 @@
 // This script handles the functionality of the recipe browser application.
 document.addEventListener("DOMContentLoaded", () => {
   fetchRecipesAndDisplay();
+  checkAuthStatus();
 });
 
 function getBaseUrl() {
@@ -42,7 +43,7 @@ function renderRecipeCards(data) {
     });
     const viewBtn = document.createElement("button");
     viewBtn.textContent = "View Recipe";
-    viewBtn.onclick = () => window.location.href = `recipe.html?id=${recipe._id}`; // Redirect to recipe.html with the recipe ID
+    viewBtn.onclick = () => window.location.href = `recipe.html?id=${recipe._id}`;
     card.appendChild(viewBtn);
     recipeGrid.appendChild(card);
   });
@@ -196,7 +197,7 @@ async function checkAuthStatus() {
 
   try {
     const res = await fetch(`${baseUrl}/users/me`, {
-      credentials: "include" // 🔐 This ensures cookies/session data are sent
+      credentials: "include"
     });
 
     const authSection = document.getElementById("authSection");
@@ -207,11 +208,11 @@ async function checkAuthStatus() {
       const user = await res.json();
       authSection.innerHTML = `
         <span>👋 Hello, ${user.username}</span>
-        <button onclick="window.location.href='${baseUrl}/users/logout'">Logout</button>
+        <button id="login-btn" onclick="window.location.href='${baseUrl}/users/logout'">Logout</button>
       `;
     } else {
       authSection.innerHTML = `
-        <button onclick="window.location.href='${baseUrl}/users/auth/github'">Login with GitHub</button>
+        <button id="logout-btn" onclick="window.location.href='${baseUrl}/users/auth/github'">Login with GitHub</button>
       `;
     }
   } catch (err) {

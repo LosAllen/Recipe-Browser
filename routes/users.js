@@ -16,7 +16,7 @@ router.get('/me', (req, res) => {
 // GitHub OAuth Login
 router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 
-// GitHub OAuth Callback (FIXED)
+// GitHub OAuth Callback
 router.get(
   '/auth/github/callback',
   passport.authenticate('github', { failureRedirect: '/' }),

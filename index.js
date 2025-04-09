@@ -13,6 +13,7 @@ import userRoutes from './routes/users.js';
 import recipeRoutes from './routes/recipes.js';
 import categoryRoutes from './routes/categories.js';
 import commentRoutes from './routes/comments.js';
+import authRoutes from './routes/auth.js';
 
 // Load Environment Variables
 dotenv.config();
@@ -25,13 +26,12 @@ app.use(cookieParser());
 app.use(cors({
     origin: [
         'http://localhost:3000',
-        'https://recipe-browser-yk8s.onrender.com'
-
+        'https://recipe-browser-yk8s.onrender.com',
+        "https://recipe-browser-8fj5.onrender.com"
     ],
     credentials: true, // ✅ REQUIRED for session cookies to work cross-origin
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
 }));
 
 
@@ -74,6 +74,7 @@ app.use('/users', userRoutes);
 app.use('/recipes', recipeRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/comments', commentRoutes);
+app.use('/', authRoutes);
 
 // Swagger Documentation
 setupSwagger(app);
