@@ -7,7 +7,7 @@ A full-stack Node.js application that allows users to browse, create, comment on
 - Live App: https://recipe-browser-yk8s.onrender.com
 - Swagger Docs: https://recipe-browser-yk8s.onrender.com/api-docs
 - GitHub Repo: https://github.com/Jonathant4242/Recipe-Browser
-- YouTube Demo: (add your YouTube link here)
+- YouTube Demo: (https://youtu.be/HEc7IeZJ3Nk)
 
 ## Features
 
