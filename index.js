@@ -29,7 +29,7 @@ app.use(cookieParser());
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://recipe-browser-8fj5.onrender.com'
+    'https://recipe-browser-yk8s.onrender.com'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
